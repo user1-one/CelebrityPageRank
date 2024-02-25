@@ -1,0 +1,61 @@
+import networkx as nx
+
+# Create a directed graph
+G = nx.DiGraph()
+
+# Add edges (connections) to the graph
+connections = [
+    ('Taylor Swift', 'Ed Sheeran'), ('Taylor Swift', 'Selena Gomez'),
+    ('Taylor Swift', 'Ariana Grande'), ('Taylor Swift', 'Justin Bieber'),
+    ('Ed Sheeran', 'Taylor Swift'), ('Ed Sheeran', 'Justin Bieber'),
+    ('Ed Sheeran', 'Beyoncé'), ('Ed Sheeran', 'Selena Gomez'),
+    ('Selena Gomez', 'Taylor Swift'), ('Selena Gomez', 'Ariana Grande'),
+    ('Selena Gomez', 'Kim Kardashian'), ('Selena Gomez', 'Kylie Jenner'),
+    ('Ariana Grande', 'Selena Gomez'), ('Ariana Grande', 'Beyoncé'),
+    ('Ariana Grande', 'Justin Bieber'), ('Ariana Grande', 'Dwayne Johnson'),
+    ('Ariana Grande', 'Kim Kardashian'), ('Justin Bieber', 'Ed Sheeran'),
+    ('Justin Bieber', 'Ariana Grande'), ('Justin Bieber', 'Kim Kardashian'),
+    ('Justin Bieber', 'Taylor Swift'), ('Beyoncé', 'Kim Kardashian'),
+    ('Beyoncé', 'Jay-Z'), ('Jay-Z', 'Beyoncé'),
+    ('Kim Kardashian', 'Beyoncé'), ('Kim Kardashian', 'Taylor Swift'),
+    ('Kim Kardashian', 'Justin Bieber'), ('Kim Kardashian', 'Kylie Jenner'),
+    ('Dwayne Johnson', 'Beyoncé'), ('Dwayne Johnson', 'Ariana Grande'),
+    ('Dwayne Johnson', 'Kevin Hart'), ('Kevin Hart', 'Dwayne Johnson'),
+    ('Kevin Hart', 'Ellen DeGeneres'), ('Ellen DeGeneres', 'Kevin Hart'),
+    ('Ellen DeGeneres', 'Oprah Winfrey'), ('Oprah Winfrey', 'Ellen DeGeneres'),
+    ('Oprah Winfrey', 'Jay-Z'), ('Oprah Winfrey', 'Michelle Obama'),
+    ('Michelle Obama', 'Oprah Winfrey'), ('Michelle Obama', 'Beyoncé'),
+    ('Kylie Jenner', 'Kim Kardashian'), ('Kylie Jenner', 'Kendall Jenner'),
+    ('Kylie Jenner', 'Selena Gomez'), ('Kendall Jenner', 'Kylie Jenner'),
+    ('Kendall Jenner', 'LeBron James'), ('LeBron James', 'Kendall Jenner'),
+    ('LeBron James', 'Taylor Swift'), ('LeBron James', 'Beyoncé')
+]
+
+G.add_edges_from(connections)  # G is the directed graph containing our celebrities
+
+# List of alpha values
+alpha_values = [0.15, 0, 1, 0.25, 0.75, 0.50]
+
+# Function to compute PageRank for a given alpha
+def compute_pagerank(G, alpha):
+    return nx.pagerank(G, alpha=alpha)
+
+# Compute PageRank for each alpha and store in a dictionary
+pageranks = {alpha: compute_pagerank(G, alpha) for alpha in alpha_values}
+
+# Print the table header
+header = "Celebrity\t" + "\t".join([f"a{i+1}={alpha}" for i, alpha in enumerate(alpha_values)])
+print(header)
+
+# Print the table rows
+for celebrity in G.nodes():
+    row = f"{celebrity}"
+    for alpha in alpha_values:
+        row += f"\t{pageranks[alpha][celebrity]:.3f}"
+    #print(row)
+# Sort the PageRank  in descending order
+sorted_ranks = {alpha: sorted(pageranks[alpha].items(), key=lambda item: item[1], reverse=True) for alpha in alpha_values}
+
+# Iterate over the sorted ranks and print them
+for celebrity, rank in sorted_ranks[alpha_values[2]]:
+    print(f"{celebrity}: {(rank):.3f}") # prints to 3 decimal places
