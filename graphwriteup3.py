@@ -52,3 +52,4 @@ plt.show()
 
 # Displaying the adjacency matrix
 print(adjacency_matrix, unique_celebrities)
+print ("Complete")
